@@ -45,6 +45,28 @@ function validate (values) {
         result.errorFields.push('phone');
     }
 
+    if (!values.phone) {
+        result.isValid = false;
+        result.errorFields.push('phone');
+    } else {
+        var digits = values.phone.match(/\d/g);
+
+        if (!(digits instanceof Array)) {
+            result.isValid = false;
+            result.errorFields.push('phone');
+        } else {
+            var digitsSum = digits.reduce((sum, digit) => {
+                return sum + +digit;
+            }, 0);
+            console.log('Digits sum is: ' + digitsSum);
+
+            if (digitsSum > 30) {
+                result.isValid = false;
+                result.errorFields.push('phone');
+            };
+        }
+    }
+
     return result;
 }
 
