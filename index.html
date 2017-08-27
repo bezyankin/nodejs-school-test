@@ -1,21 +1,28 @@
 <!DOCTYPE html>
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="/styles.css">
-    <script src="/app.js"></script>
+    <style type="text/css">.error{ border: 1px solid red; }</style>
+    <script src="/index.js"></script>
 </head>
 <html>
     <body>
-        <form id="myForm">
+        <form id="myForm" action="localhost">
             <div>ФИО</div>
             <input name="fio" type="text">
+
             <div>Email</div>
             <input name="email" type="email">
+
             <div>Телефон</div>
             <input name="phone" type="tel">
+
             <div>
                 <button type="submit" id="submitButton">Отправить</button>
             </div>
+        </form>
+        <form id="mockParameters">
+            <input type="radio" name="isMocked">mocked
+            <input type="radio" name="isMocked">real
         </form>
         <div id="resultContainer"></div>
     </body>
