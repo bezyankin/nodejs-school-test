@@ -20,9 +20,14 @@
                 <button type="submit" id="submitButton">Отправить</button>
             </div>
         </form>
-        <form id="mockParameters">
-            <input type="radio" name="isMocked">mocked
-            <input type="radio" name="isMocked">real
+        <form id="mockStatus">
+            <input type="radio" name="isMocked" value="true">mocked
+            <input type="radio" name="isMocked" value="false">real
+        </form>
+        <form id="mockResponse">
+            <input type="radio" name="responseType" value="success">success
+            <input type="radio" name="responseType" value="error">error
+            <input type="radio" name="responseType" value="progress">progress
         </form>
         <div id="resultContainer"></div>
     </body>

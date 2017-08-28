@@ -45,11 +45,12 @@ function validate (values) {
         result.errorFields.push('phone');
     }
 
+    var digitsRegexp = /\d/g;
     if (!values.phone) {
         result.isValid = false;
         result.errorFields.push('phone');
     } else {
-        var digits = values.phone.match(/\d/g);
+        var digits = values.phone.match(digitsRegexp);
 
         if (!(digits instanceof Array)) {
             result.isValid = false;
@@ -116,11 +117,10 @@ function submit (e) {
 
     var form = document.querySelector('#myForm');
 
-    var serverUrl = '';
-    if (document.querySelector('#mockParameters').value) {
-        serverUrl = 'localhost';
+    if (document.querySelector('#mockStatus :checked').value === "true") {
+        client.get(values);
     } else {
-        serverUrl = form.value;
+        // real call here
     }
 }
 
@@ -129,3 +129,40 @@ function initActionHandlers () {
 
     document.querySelector('#myForm').onsubmit = submit;
 }
+
+
+////////////////////////////////////////////////
+////////////////   API client   ////////////////
+////////////////////////////////////////////////
+
+function HttpClientAbstract (url) {
+    this.url = url;
+}
+
+HttpClientAbstract.prototype.get = function () {
+    throw new Error("Not implemented method call");
+}
+
+function HttpClient(url) {
+    HttpClientAbstract.call(this, url);
+}
+HttpClient.prototype = Object.create(HttpClientAbstract.prototype);
+HttpClient.prototype.constructor = HttpClient;
+HttpClient.prototype.get = function () {
+    console.log("real call of api here");
+}
+
+function HttpClientMock(url) {
+    HttpClientAbstract.call(this, url);
+}
+HttpClientMock.prototype = Object.create(HttpClientAbstract.prototype);
+HttpClientMock.prototype.constructor = HttpClientMock;
+HttpClientMock.prototype.get = function (values) {
+    var responseStatus = document.querySelector('#mockResponse :checked').value;
+    console.log("HttpClientMock.get() called for " + responseStatus + " result");
+}
+
+
+
+var client = new HttpClientMock();
+
