@@ -7,6 +7,7 @@ function initialize () {
   
     initGlobalObject();
     initActionHandlers();
+    initForm();
 }
 
 function initGlobalObject () {
@@ -110,17 +111,34 @@ function submit (e) {
     
     var validationResult = validate(values);
     clearErrors();
+
     if (!validationResult.isValid) {
         markErrors(validationResult.errorFields);
         return;
     }
 
-    var form = document.querySelector('#myForm');
+    httpGet(handleResponse);
+}
 
-    if (document.querySelector('#mockStatus :checked').value === "true") {
-        client.get(values);
-    } else {
-        // real call here
+function handleResponse (response) {
+    console.log(response);
+
+    var resultContainer = document.querySelector('#resultContainer');
+
+    if (response.status === "success") {
+        resultContainer.innerText = "Success";
+        resultContainer.className = "success";
+    }
+
+    if (response.status === "error") {
+        resultContainer.innerText = response.reason;
+        resultContainer.className = "error";
+    }
+
+    if (response.status === "progress") {
+        resultContainer.innerText = "";
+        resultContainer.className = "progress";
+        setTimeout(submit, response.timeout);
     }
 }
 
@@ -128,6 +146,21 @@ function initActionHandlers () {
     console.log('initActionHandlers called')
 
     document.querySelector('#myForm').onsubmit = submit;
+    document.querySelector('#mockResponse').onchange = refreshUrl;
+
+}
+
+function initForm() {
+    setData({
+        fio: 'Francis Ford Coppola',
+        email: 'coppola.francis@ya.ru',
+        phone: '+7(912)000-22-22'
+    });
+}
+
+function refreshUrl() {
+    var responseStatus = document.querySelector('#mockResponse :checked').value;
+    document.querySelector('#myForm').action = "http://localhost:9080/" + responseStatus + ".json";
 }
 
 
@@ -135,34 +168,22 @@ function initActionHandlers () {
 ////////////////   API client   ////////////////
 ////////////////////////////////////////////////
 
-function HttpClientAbstract (url) {
-    this.url = url;
-}
-
-HttpClientAbstract.prototype.get = function () {
-    throw new Error("Not implemented method call");
-}
-
-function HttpClient(url) {
-    HttpClientAbstract.call(this, url);
-}
-HttpClient.prototype = Object.create(HttpClientAbstract.prototype);
-HttpClient.prototype.constructor = HttpClient;
-HttpClient.prototype.get = function () {
+function httpGet (callback) {
     console.log("real call of api here");
+
+    var url = getUrlFromForm();
+
+    var request = new XMLHttpRequest();
+    request.open('GET', url);
+    request.onreadystatechange = () => {
+        if (request.readyState === XMLHttpRequest.DONE) {
+            callback(JSON.parse(request.response));
+        }
+    }
+
+    request.send();
 }
 
-function HttpClientMock(url) {
-    HttpClientAbstract.call(this, url);
+function getUrlFromForm () {
+    return document.querySelector('#myForm').action;
 }
-HttpClientMock.prototype = Object.create(HttpClientAbstract.prototype);
-HttpClientMock.prototype.constructor = HttpClientMock;
-HttpClientMock.prototype.get = function (values) {
-    var responseStatus = document.querySelector('#mockResponse :checked').value;
-    console.log("HttpClientMock.get() called for " + responseStatus + " result");
-}
-
-
-
-var client = new HttpClientMock();
-

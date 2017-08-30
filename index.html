@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <head>
     <meta charset="utf-8">
-    <style type="text/css">.error{ border: 1px solid red; }</style>
+    <style type="text/css">
+    .error{ border: 1px solid red; }
+    .success{ border: 1px solid green; }
+    .progress{ border: 1px solid blue; }
+    </style>
     <script src="/index.js"></script>
 </head>
 <html>
     <body>
-        <form id="myForm" action="localhost">
+        <form id="myForm" action="http://localhost:9080">
             <div>ФИО</div>
             <input name="fio" type="text">
 
@@ -20,10 +24,7 @@
                 <button type="submit" id="submitButton">Отправить</button>
             </div>
         </form>
-        <form id="mockStatus">
-            <input type="radio" name="isMocked" value="true">mocked
-            <input type="radio" name="isMocked" value="false">real
-        </form>
+        <br>
         <form id="mockResponse">
             <input type="radio" name="responseType" value="success">success
             <input type="radio" name="responseType" value="error">error
