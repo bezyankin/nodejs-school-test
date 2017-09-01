@@ -7,7 +7,7 @@ function initialize () {
   
     initGlobalObject();
     initActionHandlers();
-    initForm();
+    // initForm();
 }
 
 function initGlobalObject () {
