@@ -117,6 +117,8 @@ function submit (e) {
         return;
     }
 
+    document.querySelector("#submitButton").disabled = true;
+
     httpGet(handleResponse);
 }
 
@@ -128,11 +130,13 @@ function handleResponse (response) {
     if (response.status === "success") {
         resultContainer.innerText = "Success";
         resultContainer.className = "success";
+        document.querySelector("#submitButton").disabled = false;
     }
 
     if (response.status === "error") {
         resultContainer.innerText = response.reason;
         resultContainer.className = "error";
+        document.querySelector("#submitButton").disabled = false;
     }
 
     if (response.status === "progress") {
